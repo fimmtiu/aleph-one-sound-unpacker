@@ -20,3 +20,8 @@ is why I went to all this trouble in the first place.)
 
 I used SBCL for this, but I expect it should work fine on other Common Lisp
 implementations. (If it doesn't, patches welcome!)
+
+References for the curious:
+* Aleph One's sound loading code: https://sourceforge.net/p/marathon/code/HEAD/tree/trunk/Source_Files/Sound/SoundFile.cpp
+* Inside Macintosh: Sound, chapter 2: http://mirror.informatimago.com/next/developer.apple.com/documentation/mac/pdf/Sound/Sound_Manager.pdf
+* soundfile++'s WAV format documentation: http://soundfile.sapp.org/doc/WaveFormat/
