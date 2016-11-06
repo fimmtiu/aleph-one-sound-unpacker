@@ -1,17 +1,14 @@
 #!/usr/bin/env sbcl --script
 
-;;;; A simple script to read a Marathon sound file.
-
-;;; Works with all Aleph One-compatible sound files, although a couple of
-;;; the M1A1 sounds are garbled. (Not sure if that's a problem with this
-;;; script or the data.)
+;;;; A simple script to read and dump the contents of a Marathon sound
+;;;; file.
 
 (load "./util.l")
 (load "./permutation.l")
 (load "./sound.l")
 (load "./soundfile.l")
 
-;;; Reads all the sounds from the given sound file and write the resulting
+;;; Reads all the sounds from the given sound file and writes the resulting
 ;;; WAV files into a directory called "sounds".
 (defun read-and-convert-sounds (input-file)
   (ensure-directories-exist "sounds/")

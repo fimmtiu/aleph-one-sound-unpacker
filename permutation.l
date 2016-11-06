@@ -1,6 +1,12 @@
-;;;; Code to read a "permutation", which is a single sound effect. A
-;;;; "sound" may have several slightly different permutations which get
-;;;; played at random.
+;;;; Code to read a "permutation", which is a single sound effect. When a
+;;;; sound event occurs in-game, one of several slightly different
+;;;; permutations will get played at random.
+;;;;
+;;;; Terminology: A "sample" is a single fragment of audio data. A "frame"
+;;;; is all the samples needed to play all the channels of a sound at a
+;;;; given moment. (Sample and frame are identical for single-channel
+;;;; sounds.) We play the frames back at a speed of "sample-rate" frames
+;;;; per second.
 
 ;; The string "twos" packed into a 32-bit integer.
 (defconstant twos-tag (four-chars-to-int "twos"))
@@ -10,14 +16,14 @@
 (defconstant fixed-compression-tag -1)
 
 ;;; The audio data for a single permutation.
-(defclass permutation ()
-  ((sample-bits :accessor sample-bits :initform 8)
-   (channel-count :accessor channel-count :initform 1)
-   (signed-eight-bit-p :accessor signed-eight-bit-p :initform nil)
-   (little-endian-p :accessor little-endian-p :initform nil)
-   (sample-rate :accessor sample-rate)
-   (base-frequency :accessor base-frequency)
-   (data :accessor data)))
+(defstruct (permutation (:conc-name nil))
+  (sample-bits 8)
+  (channel-count 1)
+  (signed-eight-bit-p nil)
+  (little-endian-p nil)
+  (sample-rate)
+  (base-frequency)
+  (data))
 
 (defun bytes-per-frame (perm)
   (* (/ (sample-bits perm) 8) (channel-count perm)))
@@ -28,7 +34,7 @@
 ;;; There's two different kinds of permutations. "Standard" ones are simple
 ;;; pre-System 7 'snd ' resources that use unsigned eight-bit samples.
 (defun read-standard-permutation (stream)
-  (let ((perm (make-instance 'permutation))
+  (let ((perm (make-permutation))
         (length nil)
         (encoding nil))
     ;; Skip the first 4 unused bytes ("samplePtr" according to IM:S)
@@ -105,7 +111,7 @@
 ;;; An "extended" permutation is a Mac sound resource that allows for
 ;;; compression and multi-channel audio. (See Inside Macintosh: Sound.)
 (defun read-extended-permutation (stream)
-  (let ((perm (make-instance 'permutation))
+  (let ((perm (make-permutation))
         (length nil)
         (frame-count nil)
         (encoding nil))
